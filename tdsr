@@ -662,11 +662,14 @@ def copy_text(start_y, start_x, end_y, end_x):
 	copy_to_clip(buf)
 
 def copy_to_clip(data):
+	data = data.encode('utf-8')
 	if platform.system() == 'Darwin':
-		data = data.encode('utf-8')
 		proc = subprocess.Popen('pbcopy', stdin=subprocess.PIPE)
 		proc.stdin.write(data)
 		proc.stdin.close()
+	else:
+		with open(os.path.expanduser('~/.tdsr.clipboard'), 'wb') as f:
+			f.write(data)
 
 def has_more(fd):
 	r, w, e = select.select([fd], [], [], 0)
